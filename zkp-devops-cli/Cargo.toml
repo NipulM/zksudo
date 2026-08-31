@@ -1,0 +1,40 @@
+[package]
+name = "devs-cli"
+version = "0.1.0"
+edition = "2021"
+description = "ZKP-driven CLI for secretless DevOps authentication"
+
+[dependencies]
+# CLI framework
+clap = { version = "4", features = ["derive"] }
+ark-bn254 = "0.5"
+ark-ff = "0.5"
+light-poseidon = "0.3"
+reqwest = { version = "0.12", features = ["blocking", "json"] }
+
+# macOS Keychain access
+security-framework = "2"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Hex encoding for master secret
+hex = "0.4"
+
+# Random bytes for secret generation
+rand = "0.8"
+
+# SHA-256 for public commitment hash
+sha2 = "0.10"
+
+# Error handling
+anyhow = "1"
+
+# Colored terminal output
+colored = "2"
+
+# update - t3 (secret hygiene: zeroize wipes the in-memory secret/Prover.toml
+# on drop; libc::mlock keeps those pages out of swap during proving.)
+zeroize = "1"
+libc = "0.2"

@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: "zk-sudo-http-api-gateway-prod"
+  version: 1.0.0
+  description: "HTTP API for zk-sudo Application"
+  contact:
+    name: zk-sudo API
+
+components:
+  securitySchemes:
+    CognitoAuthorizer:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: ""
+          scopes: {}
+      x-amazon-apigateway-authorizer:
+        type: jwt
+        jwtConfiguration:
+          audience:
+            - "${cognito_client_id}"
+          issuer: "${cognito_issuer}"
+        identitySource: "$request.header.Authorization"
+
+  x-amazon-apigateway-integrations:
+    ControllerServiceIntegration:
+      type: aws_proxy
+      httpMethod: POST
+      uri: ${controller_service_uri}
+      payloadFormatVersion: "2.0"
+    AdminServiceIntegration:
+      type: aws_proxy
+      httpMethod: POST
+      uri: ${admin_service_uri}
+      payloadFormatVersion: "2.0"
+
+paths:
+  /admin/tokens:
+    post:
+      summary: Generate One Time Admin Token
+      security:
+        - CognitoAuthorizer: []
+      description: POST /admin/tokens endpoint
+      operationId: generateToken
+      x-amazon-apigateway-integration:
+        $ref: "#/components/x-amazon-apigateway-integrations/AdminServiceIntegration"
+
+  /health:
+    get:
+      summary: Get health
+      description: GET /health endpoint
+      operationId: getHealth
+      x-amazon-apigateway-integration:
+        $ref: "#/components/x-amazon-apigateway-integrations/ControllerServiceIntegration"
+
+  /enroll:
+    post:
+      summary: Enroll a new developer
+      description: POST /enroll endpoint
+      operationId: postEnroll
+      x-amazon-apigateway-integration:
+        $ref: "#/components/x-amazon-apigateway-integrations/ControllerServiceIntegration"
+
+  /nonce:
+    post:
+      summary: Request a nonce
+      description: POST /nonce endpoint
+      operationId: postNonce
+      x-amazon-apigateway-integration:
+        $ref: "#/components/x-amazon-apigateway-integrations/ControllerServiceIntegration"
+
+  /verify:
+    post:
+      summary: Verify a ZK proof
+      description: POST /verify endpoint
+      operationId: postVerify
+      x-amazon-apigateway-integration:
+        $ref: "#/components/x-amazon-apigateway-integrations/ControllerServiceIntegration"

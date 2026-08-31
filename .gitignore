@@ -1,0 +1,60 @@
+# =====================================================================
+#  zk-sudo monorepo .gitignore
+#  Covers: zk_sudo_circuit (Noir), zkp-devops-cli (Rust),
+#          controller-service (Node/TS), infrastructure (Terraform)
+#  Patterns without a leading slash match at ANY depth.
+# =====================================================================
+
+# ---------- OS / editor ----------
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# ---------- Secrets / local config ----------
+# Noir prover inputs contain the private master secret `x` — NEVER commit.
+Prover.toml
+# Environment files (controller-service, etc.)
+.env
+.env.*
+!.env.example
+
+# ---------- Rust (zkp-devops-cli) ----------
+# Build output (Cargo.lock IS committed for binary crates, so it is NOT ignored)
+target/
+
+# ---------- Noir / Barretenberg (zk_sudo_circuit) ----------
+out/
+# target/ already covered above
+
+# ---------- Node / TypeScript (controller-service) ----------
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+index.mjs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+deployment.zip
+
+# ---------- Terraform (infrastructure) ----------
+**/.terraform/*
+.terraform.lock.hcl
+.terraform.*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+# .tfvars usually hold sensitive values
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+
+# ---------- Logs ----------
+*.log
+logs/

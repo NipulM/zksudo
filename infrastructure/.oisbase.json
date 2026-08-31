@@ -1,0 +1,56 @@
+{
+  "ProjectName": "zk-sudo",
+  "Environments": [
+    "prod"
+  ],
+  "Region": "us-east-1",
+  "Services": {
+    "api-gateway": {
+      "instances": {
+        "zk-sudo-api-gw": {
+          "access": {
+            "lambda": {
+              "controller-service": [
+                "lambda:InvokeFunction"
+              ]
+            }
+          },
+          "routes": [
+            {
+              "path": "/health",
+              "method": "GET",
+              "target_service": "lambda",
+              "target_instance": "controller-service",
+              "operation_id": "getHealth",
+              "summary": "Get health",
+              "description": "GET /health endpoint",
+              "integration_name": "ControllerServiceIntegration"
+            }
+          ]
+        }
+      }
+    },
+    "dynamodb": {
+      "instances": {
+        "nonces": {},
+        "users": {}
+      }
+    },
+    "lambda": {
+      "instances": {
+        "controller-service": {
+          "access": {
+            "dynamodb": {
+              "nonces": [
+                "dynamodb:*"
+              ],
+              "users": [
+                "dynamodb:*"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
